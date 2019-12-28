@@ -1,7 +1,4 @@
-//interpolação polinomial e ajuste de curvas
-//FALTA O MENU
-
-#include "main.h"
+#include "header.h"
 
 //MAX: máxima qte de pontos
 //n: quantidade de pontos
@@ -9,7 +6,7 @@
 #define LIN_X 0
 #define LIN_Y 1
 
-//funcoes auxiliares do t2
+/* funcoes do t2 */
 void geraSubMatriz(int n, double a[][MAX], int c, double sub[][MAX]) {
    for (int i = 1; i < n; i++)
       for (int j = 0, k = 0; j < n; j++, k++) {
@@ -45,7 +42,7 @@ bool sistemaTriangularSuperior(int n, double a[][MAX], double b[], double x[]) {
 
    for (int i = n - 1; i >= 0; i--) {
       double s = 0;
-      for (int j = i+1; j < n; j++)
+      for (int j = i + 1; j < n; j++)
          s += a[i][j] * x[j];
 
       x[i] = (b[i] - s) / a[i][i];
@@ -96,6 +93,7 @@ bool decomposicaoLU(int n, double a[][MAX], double b[], double x[]) {
    return true;
 }
 
+/* --- */
 
 int fat(int n) {
    int fat = 1;
@@ -103,7 +101,6 @@ int fat(int n) {
       fat *= i;
    return fat;
 }
-
 
 //retorna Pn(x), sendo Pn o polinômio de grau n-1
 double newton(double x, int n, double tabela[][MAX]) {
@@ -158,7 +155,7 @@ double coefDeterminacao(int n, double tabela[][MAX], double yAjustado[]) {
       y += tabela[LIN_Y][i];
       y2 += pow(tabela[LIN_Y][i], 2);
    }
-   return 1 - (n*erro2)/(n*y2 - pow(y,2));
+   return 1 - (n * erro2) / (n * y2 - pow(y, 2));
 }
 
 //ajusta os pontos a uma reta do tipo y = a0 + a1.x
@@ -166,16 +163,16 @@ void ajusteReta(int n, double tabela[][MAX], double *a0, double *a1, double yAju
    double xy = 0, x = 0, y = 0, x2 = 0; //somatórios
 
    for (int j = 0; j < n; j++) {
-      xy += tabela[LIN_X][j]*tabela[LIN_Y][j];
+      xy += tabela[LIN_X][j] * tabela[LIN_Y][j];
       x += tabela[LIN_X][j];
       y += tabela[LIN_Y][j];
       x2 += pow(tabela[LIN_X][j], 2);
    }
-   *a1 = (n*xy - x*y)/(n*x2 - pow(x,2));
-   *a0 = (y-(*a1)*x)/n;
+   *a1 = (n * xy - x * y) / (n * x2 - pow(x, 2));
+   *a0 = (y - (*a1) * x) / n;
 
    for (int i = 0; i < n; i++)
-      yAjustado[i] = (*a0) + (*a1)*tabela[LIN_X][i];
+      yAjustado[i] = (*a0) + (*a1) * tabela[LIN_X][i];
 
    *coefDet = coefDeterminacao(n, tabela, yAjustado);
 }
@@ -189,7 +186,7 @@ void ajustePolinomial(int m, int n, double tabela[][MAX], double a[], double yAj
       for (int j = 0; j <= m; j++) {
          coef[i][j] = 0;
          for (int p = 0; p < n; p++) //se i+j = 0, coef[i][j] = n
-            coef[i][j] += pow(tabela[LIN_X][p], i+j);
+            coef[i][j] += pow(tabela[LIN_X][p], i + j);
       }
    // impMatriz(m+1, coef);
 
@@ -200,8 +197,8 @@ void ajustePolinomial(int m, int n, double tabela[][MAX], double a[], double yAj
          termInd[i] += tabela[LIN_Y][p] * pow(tabela[LIN_X][p], i);
    }
    // impVetor(m+1, termInd);
-   decomposicaoLU(m+1, coef, termInd, a);
-      
+   decomposicaoLU(m + 1, coef, termInd, a);
+
    for (int i = 0; i < n; i++) {
       yAjustado[i] = 0;
       for (int k = 0; k <= m; k++)
@@ -215,18 +212,18 @@ void ajusteExponencial(int n, double tabela[][MAX], double *a, double *b, double
    double a0, a1;
    for (int j = 0; j < n; j++)
       tabela[LIN_Y][j] = log(tabela[LIN_Y][j]);
-      
+
    ajusteReta(n, tabela, &a0, &a1, yAjustado, &(*coefDet));
    // printf("a0: %lf\na1: %lf\n", a0, a1);
    *a = pow(M_E, a0);
    *b = pow(M_E, a1);
 }
 
+//! FALTA MENU
 int main() {
-   double tabela[2][MAX] =  { 
-      {0, 1, 2, 4, 5}, 
-      {4, 1, -1, 1, 2}
-   };
+   double tabela[2][MAX] = {
+       {0, 1, 2, 4, 5},
+       {4, 1, -1, 1, 2}};
    int n = 5;
    double a[MAX], y[MAX], coefDet;
 

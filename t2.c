@@ -1,6 +1,4 @@
-//resolução de sistemas lineares e cálculo da matriz inversa
-
-#include "main.h"
+#include "header.h"
 
 //a[][]: coeficientes
 //b[]  : termos independentes
@@ -129,15 +127,13 @@ double *diferencaVet(int n, double v1[], double v2[]) {
    return v;
 }
 
-
-
 bool sistemaTriangularSuperior(int n, double a[][MAX], double b[], double x[]) {
    if (determinante(n, a) == 0)
       return false;
 
    for (int i = n - 1; i >= 0; i--) {
       double s = 0;
-      for (int j = i+1; j < n; j++)
+      for (int j = i + 1; j < n; j++)
          s += a[i][j] * x[j];
 
       x[i] = (b[i] - s) / a[i][i];
@@ -411,32 +407,31 @@ int main() {
          leVetor(n, b);
 
          switch (op) {
-            case 2:
-               ok = sistemaTriangularInferior(n, a, b, x);
-               break;
-            case 3:
-               ok = sistemaTriangularSuperior(n, a, b, x);
-               break;
-            case 4:
-               ok = decomposicaoLU(n, a, b, x);
-               break;
-            case 5:
-               ok = cholesky(n, a, b, x);
-               break;
-            case 6:
-               ok = gaussCompacto(n, a, b, x);
-               break;
-            case 7:
-               ok = gaussJordan(n, a, b, x);
-               break;
+         case 2:
+            ok = sistemaTriangularInferior(n, a, b, x);
+            break;
+         case 3:
+            ok = sistemaTriangularSuperior(n, a, b, x);
+            break;
+         case 4:
+            ok = decomposicaoLU(n, a, b, x);
+            break;
+         case 5:
+            ok = cholesky(n, a, b, x);
+            break;
+         case 6:
+            ok = gaussCompacto(n, a, b, x);
+            break;
+         case 7:
+            ok = gaussJordan(n, a, b, x);
+            break;
          }
          if (ok) {
             printf("\nO vetor solução é:\n");
             impVetor(n, x);
-         }
-         else printf("\nO método não converge!\n");
-      }
-      else if (op == 8 || op == 9) {
+         } else
+            printf("\nO método não converge!\n");
+      } else if (op == 8 || op == 9) {
          printf("\nTermos independentes:\n");
          leVetor(n, b);
          printf("\nAproximação inicial para o vetor solução:\n");
@@ -448,21 +443,21 @@ int main() {
 
          if (op == 8)
             ok = jacobi(n, a, b, e, x0, maxIte, x, &ite);
-         else ok = gaussSeidel(n, a, b, e, x0, maxIte, x, &ite);
+         else
+            ok = gaussSeidel(n, a, b, e, x0, maxIte, x, &ite);
 
          if (ok) {
             printf("\nO vetor solução é:\n");
             impVetor(n, x);
-         }
-         else printf("\nO método não converge!\n");
-      }
-      else {
+         } else
+            printf("\nO método não converge!\n");
+      } else {
          ok = matrizInversa(n, a, i);
          if (ok) {
             printf("A matriz solução é:\n");
             impMatriz(n, i);
-         }
-         else printf("\nO método não converge!\n");
+         } else
+            printf("\nO método não converge!\n");
       }
 
       do {
