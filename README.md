@@ -1,4 +1,4 @@
-# Métodos numéricos computacionais
+# Descrição
 
 ## `t1.c`: cálculo de zero de funções e diferenciação numérica
 - método da bisseção
